@@ -1,0 +1,41 @@
+{
+  "version": "7",
+  "dialect": "mysql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1778815150811,
+      "tag": "0000_damp_morph",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1778815293425,
+      "tag": "0001_lovely_stephen_strange",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1778818537868,
+      "tag": "0002_cooing_network",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1778820490609,
+      "tag": "0003_gorgeous_vulture",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1779327701191,
+      "tag": "0004_pink_risque",
+      "breakpoints": true
+    }
+  ]
+}

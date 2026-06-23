@@ -1,0 +1,156 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* Varsity/Collegiate display font loaded via Google Fonts link in index.html */
+
+@theme inline {
+  --color-background: oklch(0.13 0.02 285);
+  --color-foreground: oklch(0.95 0.01 285);
+  --color-card: oklch(0.17 0.02 285);
+  --color-card-foreground: oklch(0.95 0.01 285);
+  --color-popover: oklch(0.17 0.02 285);
+  --color-popover-foreground: oklch(0.95 0.01 285);
+  --color-primary: oklch(0.55 0.25 15);
+  --color-primary-foreground: oklch(0.98 0.005 285);
+  --color-secondary: oklch(0.22 0.03 285);
+  --color-secondary-foreground: oklch(0.9 0.01 285);
+  --color-muted: oklch(0.2 0.02 285);
+  --color-muted-foreground: oklch(0.6 0.02 285);
+  --color-accent: oklch(0.25 0.04 285);
+  --color-accent-foreground: oklch(0.9 0.01 285);
+  --color-destructive: oklch(0.55 0.22 25);
+  --color-destructive-foreground: oklch(0.98 0.005 285);
+  --color-border: oklch(0.28 0.03 285);
+  --color-input: oklch(0.25 0.03 285);
+  --color-ring: oklch(0.55 0.25 15);
+  --color-chart-1: oklch(0.55 0.25 15);
+  --color-chart-2: oklch(0.6 0.18 50);
+  --color-chart-3: oklch(0.5 0.15 285);
+  --color-chart-4: oklch(0.65 0.2 140);
+  --color-chart-5: oklch(0.7 0.15 60);
+  --color-sidebar: oklch(0.15 0.02 285);
+  --color-sidebar-foreground: oklch(0.9 0.01 285);
+  --color-sidebar-primary: oklch(0.55 0.25 15);
+  --color-sidebar-primary-foreground: oklch(0.98 0.005 285);
+  --color-sidebar-accent: oklch(0.22 0.03 285);
+  --color-sidebar-accent-foreground: oklch(0.9 0.01 285);
+  --color-sidebar-border: oklch(0.28 0.03 285);
+  --color-sidebar-ring: oklch(0.55 0.25 15);
+
+  /* Blood red accent */
+  --color-blood: oklch(0.5 0.28 20);
+  --color-blood-glow: oklch(0.55 0.25 15);
+
+  --radius-lg: 0.75rem;
+  --radius-md: 0.5rem;
+  --radius-sm: 0.375rem;
+
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Graduate", serif;
+
+  --ease-out-snappy: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out-smooth: cubic-bezier(0.77, 0, 0.175, 1);
+
+  --animate-fade-in: fade-in 0.3s var(--ease-out-snappy);
+  --animate-slide-up: slide-up 0.35s var(--ease-out-snappy);
+  --animate-pulse-blood: pulse-blood 2s ease-in-out infinite;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse-blood {
+  0%,
+  100% {
+    box-shadow: 0 0 20px oklch(0.5 0.28 20 / 0.3);
+  }
+  50% {
+    box-shadow: 0 0 40px oklch(0.5 0.28 20 / 0.6);
+  }
+}
+
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-border);
+  }
+
+  html {
+    color: var(--color-foreground);
+    background: var(--color-background);
+  }
+
+  body {
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  .font-display {
+    font-family: var(--font-display);
+  }
+}
+
+@utility container {
+  margin-inline: auto;
+  padding-inline: 1rem;
+  @media (width >= 640px) {
+    max-width: 640px;
+  }
+  @media (width >= 768px) {
+    max-width: 768px;
+  }
+  @media (width >= 1024px) {
+    max-width: 1024px;
+  }
+  @media (width >= 1280px) {
+    max-width: 1280px;
+  }
+}
+
+/* Flex defaults */
+.flex {
+  min-width: 0;
+  min-height: 0;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: oklch(0.3 0.02 285);
+  border-radius: 3px;
+}
+
+/* Blood drip text effect */
+.text-blood-glow {
+  text-shadow: 0 0 10px oklch(0.5 0.28 20 / 0.5), 0 0 30px oklch(0.5 0.28 20 / 0.3);
+}
