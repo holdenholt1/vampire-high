@@ -260,12 +260,13 @@ export const appRouter = router({
             const newRound = (game.round || 1) + 1;
             const timerEndsAt = Date.now() + DISCUSSION_DURATION_MS;
             await resetVotes(game.id);
+            // NOTE: keep vampireKillId / voteEliminatedId so the "who was
+            // eliminated" message persists through the next discussion phase.
+            // They get overwritten at the next round_end.
             await updateGame(game.id, {
               phase: "playing",
               timerEndsAt,
               round: newRound,
-              vampireKillId: null,
-              voteEliminatedId: null,
             });
             game.phase = "playing";
             (game as any).timerEndsAt = timerEndsAt;
@@ -288,9 +289,11 @@ export const appRouter = router({
         }));
 
         // Get vampire kill and vote eliminated info for round_end display
+        // AND during the following discussion ("playing") so the elimination
+        // announcement stays visible into the next round.
         let vampireKill = null;
         let voteEliminated = null;
-        if (game.phase === "round_end" || game.phase === "results") {
+        if (game.phase === "round_end" || game.phase === "results" || game.phase === "playing") {
           if ((game as any).vampireKillId) {
             const killed = allPlayers.find((p) => p.id === (game as any).vampireKillId);
             if (killed) {
