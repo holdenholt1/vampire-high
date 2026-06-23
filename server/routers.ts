@@ -30,6 +30,7 @@ import {
 import {
   ROLES,
   NON_VAMPIRE_ROLES,
+  SPECIAL_ROLES,
   NON_VOTING_ROLES,
   NON_INITIATING_ROLES,
   MIN_PLAYERS,
@@ -192,16 +193,18 @@ export const appRouter = router({
           });
 
         // ── Assign roles ──
+        // Exactly 1 Vampire. The 9 special roles are dealt out first (one each);
+        // any remaining players become plain Students.
         const shuffled = [...allPlayers].sort(() => Math.random() - 0.5);
         const vampireIndex = Math.floor(Math.random() * shuffled.length);
-        const availableRoles = [...NON_VAMPIRE_ROLES].sort(() => Math.random() - 0.5);
+        const availableRoles = [...SPECIAL_ROLES].sort(() => Math.random() - 0.5);
         const assignments: { playerId: number; role: Role }[] = [];
 
         for (let i = 0; i < shuffled.length; i++) {
           if (i === vampireIndex) {
             assignments.push({ playerId: shuffled[i].id, role: "Vampire" });
           } else {
-            const role = availableRoles.pop()!;
+            const role = availableRoles.pop() ?? "Student";
             assignments.push({ playerId: shuffled[i].id, role });
           }
         }

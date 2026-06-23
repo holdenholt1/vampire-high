@@ -9,11 +9,20 @@ export const ROLES = [
   "Principal",
   "School Counselor",
   "Vampire",
+  "Student",
 ] as const;
 
 export type Role = (typeof ROLES)[number];
 
-export const NON_VAMPIRE_ROLES = ROLES.filter((r) => r !== "Vampire") as Exclude<Role, "Vampire">[];
+// The 9 special (non-vampire, non-student) roles. These are dealt out FIRST,
+// one per player; any players beyond 9 become plain Students.
+export const SPECIAL_ROLES = ROLES.filter(
+  (r) => r !== "Vampire" && r !== "Student"
+) as Exclude<Role, "Vampire" | "Student">[];
+
+// Kept for backward compatibility (Mathlete "unused roles" etc. use this).
+// Equivalent to the special-role pool.
+export const NON_VAMPIRE_ROLES = SPECIAL_ROLES;
 
 /**
  * Roles that CANNOT VOTE at all.
@@ -112,6 +121,7 @@ export const ROLE_TO_ABILITY: Record<Role, AbilityName | null> = {
   Principal: "principal_administrative_leave",
   "School Counselor": "school_counselor_pull",
   Vampire: null,
+  Student: null,
 };
 
 /**
@@ -179,7 +189,7 @@ export interface PlayerState {
 
 // ─── Game Constants ─────────────────────────────────────────────────
 export const MIN_PLAYERS = 4;
-export const MAX_PLAYERS = 10;
+export const MAX_PLAYERS = 20;
 export const GAME_CODE_LENGTH = 6;
 export const DISCUSSION_DURATION_MS = 3 * 60 * 1000; // 3 minutes
 export const VOTING_DURATION_MS = 2 * 60 * 1000; // 2 minutes
