@@ -6,8 +6,12 @@ import { registerStorageProxy } from "./storageProxy";
 import { appRouter } from "../routers";
 import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
+import { runMigrations } from "./migrate";
 
 async function startServer() {
+  // Ensure database tables exist before accepting requests.
+  await runMigrations().catch((e) => console.error("[migrate] failed:", e));
+
   const app = express();
   const server = createServer(app);
 
