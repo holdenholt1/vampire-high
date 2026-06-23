@@ -1,14 +1,27 @@
 import { build } from "esbuild";
+import path from "path";
+import { fileURLToPath } from "url";
 
-// Externalize all installed dependencies (and their subpaths, e.g.
-// "drizzle-orm/mysql2") so esbuild bundles only our own source. A plugin marks
-// anything that isn't a relative/absolute path as external — the robust way to
-// avoid the entry-point flag conflict and handle deep imports.
-const externalizeDeps = {
-  name: "externalize-deps",
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+// Resolve our internal path aliases (@shared/* -> ./shared/*, @/* -> ./client/src/*)
+// so they get BUNDLED, while real npm packages stay external (loaded from
+// node_modules at runtime).
+const aliasPlugin = {
+  name: "alias-and-externals",
   setup(b) {
-    // Any import that doesn't start with "." or "/" is a node_modules package.
-    b.onResolve({ filter: /^[^./]|^\.[^./]/ }, (args) => {
+    // Bundle @shared/* by rewriting to the real file path.
+    b.onResolve({ filter: /^@shared\// }, (args) => {
+      const rel = args.path.replace(/^@shared\//, "");
+      return { path: path.resolve(__dirname, "shared", rel) };
+    });
+    // Bundle @/* (client) similarly, in case anything references it.
+    b.onResolve({ filter: /^@\// }, (args) => {
+      const rel = args.path.replace(/^@\//, "");
+      return { path: path.resolve(__dirname, "client/src", rel) };
+    });
+    // Everything else that's a bare package name -> external (node_modules).
+    b.onResolve({ filter: /^[^./]/ }, (args) => {
       if (args.kind === "entry-point") return null;
       return { path: args.path, external: true };
     });
@@ -21,5 +34,6 @@ await build({
   format: "esm",
   bundle: true,
   outdir: "dist",
-  plugins: [externalizeDeps],
+  resolveExtensions: [".ts", ".js", ".mjs", ".json"],
+  plugins: [aliasPlugin],
 }).then(() => console.log("Server bundled to dist/index.js"));
