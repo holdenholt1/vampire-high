@@ -6,7 +6,8 @@ import path from "path";
 
 export async function setupVite(app: Express, server: Server) {
   // Lazy-load dev-only deps so production (which never calls this) doesn't need vite installed.
-  const { createServer as createViteServer } = await import("vite");
+  const viteModule = await import("vite");
+   const createViteServer = viteModule.createServer;
   const viteConfig = (await import("../../vite.config")).default;
   const serverOptions = {
     middlewareMode: true,
