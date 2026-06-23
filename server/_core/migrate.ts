@@ -34,12 +34,18 @@ export async function runMigrations() {
   const conn = await createConnection({ uri: url, multipleStatements: true });
   try {
     for (const file of files) {
-      const sql = fs.readFileSync(path.join(dir, file), "utf8");
-      // Split on statement-breakpoint (drizzle's marker) or semicolons.
+      const raw = fs.readFileSync(path.join(dir, file), "utf8");
+      // Strip full-line SQL comments first, so a statement preceded by a
+      // comment isn't accidentally discarded.
+      const sql = raw
+        .split("\n")
+        .filter((line) => !line.trim().startsWith("--"))
+        .join("\n");
+      // Split on drizzle's breakpoint marker or statement-terminating semicolons.
       const statements = sql
         .split(/--> statement-breakpoint|;\s*$/m)
         .map((s) => s.trim())
-        .filter((s) => s.length > 0 && !s.startsWith("--"));
+        .filter((s) => s.length > 0);
 
       for (const stmt of statements) {
         try {
